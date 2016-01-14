@@ -32,9 +32,9 @@ def msbuildTypeMap = [
             def testableConfig = buildType in ['debug', 'test'] && buildArch != 'arm'
             def analysisConfig = buildType in ['release']
 
-            def buildScript = "call jenkins.buildone.cmd ${buildArch} ${buildType}"
+            def buildScript = "call ./jenkins/jenkins.buildone.cmd ${buildArch} ${buildType}"
             buildScript += analysisConfig ? ' "/p:runcodeanalysis=true"' : ''
-            def testScript = "call jenkins.testone.cmd ${buildArch} ${buildType}"
+            def testScript = "call ./jenkins/jenkins.testone.cmd ${buildArch} ${buildType}"
             def analysisScript = ".\\Build\\scripts\\check_prefast_error.ps1 . CodeAnalysis.err"
 
             // Create a new job with the specified name.  The brace opens a new closure
@@ -104,9 +104,9 @@ def msbuildTypeMap = [
             def testableConfig = buildType in ['debug', 'test']
             def analysisConfig = buildType in ['release']
 
-            def buildScript = "call jenkins.buildone.cmd ${buildArch} ${buildType} msbuild12"
+            def buildScript = "call ./jenkins/jenkins.buildone.cmd ${buildArch} ${buildType} msbuild12"
             buildScript += analysisConfig ? ' "/p:runcodeanalysis=true"' : ''
-            def testScript = "call jenkins.testone.cmd ${buildArch} ${buildType}"
+            def testScript = "call ./jenkins/jenkins.testone.cmd ${buildArch} ${buildType}"
             def analysisScript = ".\\Build\\scripts\\check_prefast_error.ps1 . CodeAnalysis.err"
 
             def newJob = job(jobName) {
@@ -163,10 +163,10 @@ def msbuildTypeMap = [
             def testableConfig = buildType in ['debug', 'test'] && buildArch != 'arm'
             def analysisConfig = buildType in ['release']
 
-            def buildScript = "call jenkins.buildone.cmd ${buildArch} ${buildType}"
+            def buildScript = "call ./jenkins/jenkins.buildone.cmd ${buildArch} ${buildType}"
             buildScript += ' "/p:BuildJIT=false"' // don't build JIT on this build task
             buildScript += analysisConfig ? ' "/p:runcodeanalysis=true"' : ''
-            def testScript = "call jenkins.testone.cmd ${buildArch} ${buildType}"
+            def testScript = "call ./jenkins/jenkins.testone.cmd ${buildArch} ${buildType}"
             testScript += ' -disablejit' // don't run tests which would require JIT to be built
             def analysisScript = ".\\Build\\scripts\\check_prefast_error.ps1 . CodeAnalysis.err"
 
@@ -222,7 +222,7 @@ def msbuildTypeMap = [
 [true, false].each { isPR -> // Defines a closure over true and false, value assigned to isPR
     def jobName = Utilities.getFullJobName(project, 'ubuntu_check_eol', isPR)
 
-    def taskString = './jenkins.check_eol.sh'
+    def taskString = './jenkins/jenkins.check_eol.sh'
     def newJob = job(jobName) {
         label('ubuntu')
         steps {
@@ -238,7 +238,7 @@ def msbuildTypeMap = [
 [true, false].each { isPR -> // Defines a closure over true and false, value assigned to isPR
     def jobName = Utilities.getFullJobName(project, 'ubuntu_check_copyright', isPR)
 
-    def taskString = './jenkins.check_copyright.sh'
+    def taskString = './jenkins/jenkins.check_copyright.sh'
     def newJob = job(jobName) {
         label('ubuntu')
         steps {
